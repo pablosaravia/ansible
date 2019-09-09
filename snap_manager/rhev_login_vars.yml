@@ -1,0 +1,5 @@
+---
+#variables para login a rhev
+rhev_url: https://pr-in-rhevman.intra.brou.com.uy/ovirt-engine/api
+rhev_user: admin@internal
+rhev_cert: rhev42.crt

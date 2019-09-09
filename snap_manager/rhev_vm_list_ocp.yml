@@ -1,0 +1,31 @@
+---
+- name: Listar vms canales ocp
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars_files:
+    - rhev_login_password.yml
+    - rhev_login_vars.yml
+
+  pre_tasks:
+  - name: Login a rhev
+    ovirt_auth:
+      username: "{{ rhev_user }}"
+      password: "{{ rhev_pass }}"
+      url: "{{ rhev_url }}"
+      ca_file: "{{ rhev_cert }}"
+    tags:
+      - always
+
+  tasks:
+  - name: Listar vms
+    ovirt_vm_facts:
+      auth: "{{ ovirt_auth }}"
+      pattern: name="*ocp*" and cluster=CL-DELL_R740-DesaTest
+      all_content: no
+      fetch_nested: yes
+      nested_attributes: name
+    register: ovirt_vms
+##  - shell: echo "{{ ovirt_vms.name }}"
+##  - shell: echo "================================================================================="
