@@ -1,4 +1,17 @@
 ---
-listavms:
-  name: openshift01
-  name: openshift02
+lista_vms:
+- openshift01
+- openshift02
+- openshift03
+- openshift04
+- openshift05
+- openshift06
+- openshift07
+- openshift08
+- openshift09
+
+#- ds-ocp-master
+#- ds-ocp-nodo1
+#- ds-ocp-nodo2
+#- ds-ocp-infra1
+#- ds-ocp-ifnra2

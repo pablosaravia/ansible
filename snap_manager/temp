@@ -1,0 +1,19 @@
+---
+  listavms: [
+       {name: openshift06, ip: 10.10.10.06},
+       {name: openshift07, ip: 10.10.10.07},
+       {name: openshift08, ip: 10.10.10.08},
+       {name: openshift09, ip: 10.10.10.09},
+       {name: openshift10, ip: 10.10.10.10},
+       {name: openshift11, ip: 10.10.10.11},
+       {name: openshift12, ip: 10.10.10.12},
+       {name: openshift13, ip: 10.10.10.13},
+       {name: openshift14, ip: 10.10.10.14},
+       {name: openshift15, ip: 10.10.10.15},
+       {name: openshift16, ip: 10.10.10.16},
+       {name: openshift17, ip: 10.10.10.17},
+       {name: openshift18, ip: 10.10.10.18},
+       {name: openshift19, ip: 10.10.10.19},
+       {name: openshift20, ip: 10.10.10.20},
+       {name: openshift21, ip: 10.10.10.21}
+       ]

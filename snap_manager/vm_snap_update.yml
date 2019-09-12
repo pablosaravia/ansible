@@ -1,0 +1,23 @@
+---
+- block:
+    - name: Creando snapshot en {{ item }}
+      ovirt_snapshot:
+        auth: "{{ ovirt_auth }}"
+        description: "snap_prueba_{{ hoy }}"
+        vm_name: "{{ item }}"
+        state: "present"
+        wait: "yes"
+      register: result
+
+    - name: Borrando snapshot en {{ item }}
+      when: result is succeeded
+      ovirt_snapshot:
+        auth: "{{ ovirt_auth }}"
+        vm_name: "{{ item }}"
+        keep_days_old: 0
+
+  rescue:
+    - debug:
+        msg: "ATENCION!!! Hubo un error procesando vm {{ item }}" 
+
+  

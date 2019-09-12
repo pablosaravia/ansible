@@ -1,0 +1,33 @@
+---
+- name: Rotacion snapshots en vms canales
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars_files:
+    - rhev_login_password.yml
+    - rhev_login_vars.yml
+    - rhev_lista_vms.yml
+  
+  vars: 
+  - hoy: "{{ fecha_hoy.stdout }}"
+  ###- lista_vms_ocp: "{{ lookup('file', 'rhev_lista_vms.yml')}}"
+
+  pre_tasks:
+  - name: Login a rhev
+    ovirt_auth:
+      username: "{{ rhev_user }}"
+      password: "{{ rhev_pass }}"
+      url: "{{ rhev_url }}"
+      ca_file: "{{ rhev_cert }}"
+
+  - command: date +%Y%m%d
+    register: fecha_hoy
+
+
+  tasks:
+    - name: Comienzo proceso
+      include_tasks: vm_snap_update.yml
+      with_items: "{{ lista_vms }}"
+      
+  

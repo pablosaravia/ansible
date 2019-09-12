@@ -1,0 +1,64 @@
+---
+- name: Creacion de vms
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars_files:
+    - rhev_login_password.yml
+    - rhev_login_vars.yml
+    - rhev_lista_vms_a_crear.yml
+
+  vars:
+    dnsIpList: "172.20.42.21 172.20.42.22"
+    dnsSearch: "intra.brou.com.uy banco.brou.com.uy"
+    commonName: "openshift"
+
+  pre_tasks:
+  - name: Login a rhev
+    ovirt_auth:
+      username: "{{ rhev_user }}"
+      password: "{{ rhev_pass }}"
+      url: "{{ rhev_url }}"
+      ca_file: "{{ rhev_cert }}"
+
+  - name: Creando vms
+    ovirt_vm:
+      auth: "{{ ovirt_auth }}"
+      name: "{{commonName}}{{ item.name }}"
+      disk_format: cow
+      template: Template_RH_7.6_sin_hard
+      cluster: CL-DELL_R740-DesaTest
+      nics:
+      - name: nic1
+        profile_name: VLAN_43
+      cloud_init:
+        nic_boot_protocol: static
+        nic_ip_address: "{{ item.ip }}"
+        nic_netmask: 255.255.255.0
+        nic_gateway: 192.168.43.1
+        nic_name: eth0
+        nic_on_boot: true
+        dns_search: "{{ dnsSearch }}"
+        dns_servers: "{{ dnsIpList }}"
+        host_name: "{{commonName}}{{ item.name }}"
+        custom_script: |
+          runcmd:
+            - touch /etc/cloud/cloud-init.disabled
+            - echo search {{ dnsSearch }} >> /etc/resolv.conf
+        user_name: root
+        root_password: password
+      state: "running"  
+    register: result
+    with_items: "{{ listavms }}"
+    register: ovirtInstances
+    async: 7200
+    poll: 0
+
+  - name: Espero a que termine la creacion
+    async_status:
+      jid: "{{ item.ansible_job_id }}"
+    register: ovirtJobs
+    until: ovirtJobs.finished
+    retries: 40
+    with_items: "{{ ovirtInstances.results }}"

@@ -15,17 +15,22 @@
       password: "{{ rhev_pass }}"
       url: "{{ rhev_url }}"
       ca_file: "{{ rhev_cert }}"
-    tags:
-      - always
 
   tasks:
   - name: Listar vms
     ovirt_vm_facts:
       auth: "{{ ovirt_auth }}"
       pattern: name="*ocp*" and cluster=CL-DELL_R740-DesaTest
-      all_content: no
-      fetch_nested: yes
-      nested_attributes: name
-    register: ovirt_vms
+      all_content: yes
+
+  - name: SHELL Despliego nombre vms
+    shell: "echo ovirt_vms "
+
+  - name: COMMAND Despliego nombre vms
+    command: "echo ovirt_vms.stdout "
+
+  - debug:
+      var: ovirt_vms
+  
 ##  - shell: echo "{{ ovirt_vms.name }}"
 ##  - shell: echo "================================================================================="
